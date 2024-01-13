@@ -1,10 +1,6 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState
-} from 'react'
+'use client'
+
+import { createContext, ReactNode, useEffect, useState } from 'react'
 
 import { ICoffeComponentProps } from '@/types/coffe'
 

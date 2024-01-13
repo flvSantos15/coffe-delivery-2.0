@@ -11,7 +11,7 @@
     "prepare": "husky install",
     "commit": "git-cz"
   },
-  "dependencies": 
+  "dependencies": { 
     "@hookform/resolvers": "^3.3.4",
     "@tanstack/react-query": "^5.17.7",
     "axios": "^1.6.5",
