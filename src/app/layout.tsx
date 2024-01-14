@@ -5,7 +5,7 @@ import TanStackProvider from '@/context/tanStackContext'
 import { CartProvider } from '@/context/cartContext'
 
 const roboto = Roboto({ subsets: ['latin'], variable: '--font-roboto' })
-const ballo = Baloo_2({ subsets: ['latin'], variable: '--font-ballor' })
+const ballo = Baloo_2({ subsets: ['latin'], variable: '--font-ballo' })
 
 export const metadata: Metadata = {
   title: 'Coffe Delivery',
