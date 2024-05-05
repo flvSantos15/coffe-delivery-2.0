@@ -1,21 +1,21 @@
 {
   "coffe": [
     {
-      "image": "../../../public/assets/Expresso.png",
+      "image": "../../../public/images/Expresso.png",
       "tag": "Tradicional",
       "title": "Expresso Tradicional",
       "description": "O tradicional café feito com água quente e grãos moídos",
       "price": "3,40"
     },
     {
-      "image": "../../../public/assets/Americano.png",
+      "image": "https://github.com/flvSantos15/coffe-delivery-flv/blob/main/public/assets/Americano.png",
       "tag": "Tradicional",
       "title": "Expresso Americano",
       "description": "Espresso diluído, menos intenso que o tradicional",
       "price": "2,50"
     },
     {
-      "image": "../../../public/assets/Expresso-Cremoso.png",
+      "image": "/public/assets/Expresso-Cremoso.png",
       "tag": "Tradicional",
       "title": "Expresso Cremoso",
       "description": "Café espresso tradicional com espuma cremosa",
@@ -85,7 +85,7 @@
       "price": "3,67"
     },
     {
-      "image": "../../../public/assets/Arabe.png",
+      "image": "../../../public/Arabe.png",
       "tag": "Tradicional",
       "title": "Árabe",
       "description": "Bebida preparada com grãos de café árabe e especiarias",

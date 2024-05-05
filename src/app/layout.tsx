@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
-import { Roboto_Flex as Roboto, Baloo_2 } from 'next/font/google'
+import { Roboto_Flex as Roboto, Baloo_2 as Baloo } from 'next/font/google'
 import './globals.css'
 import TanStackProvider from '@/context/tanStackContext'
 import { CartProvider } from '@/context/cartContext'
 
 const roboto = Roboto({ subsets: ['latin'], variable: '--font-roboto' })
-const ballo = Baloo_2({ subsets: ['latin'], variable: '--font-ballo' })
+const baloo = Baloo({ subsets: ['latin'], variable: '--font-baloo' })
 
 export const metadata: Metadata = {
   title: 'Coffe Delivery',
@@ -18,8 +18,10 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`${roboto.variable} ${ballo.variable}`}>
+    <html lang="pt-BR">
+      <body
+        className={`${roboto.variable} ${baloo.variable} font-[sans] bg-background`}
+      >
         <TanStackProvider>
           <CartProvider>{children}</CartProvider>
         </TanStackProvider>

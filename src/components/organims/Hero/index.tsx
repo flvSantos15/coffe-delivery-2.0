@@ -35,9 +35,9 @@ const itensRight = [
 
 export function Hero() {
   return (
-    <div className="flex items-center justify-center absolute top-[6.5rem]">
-      <div className="flex flex-col md:flex-col lg:flex-row items-center justify-between w-[100%] max-w-[90rem] px-[2rem] md:px-[6rem] lg:px-[10rem] py-[1rem] md:py-[4rem] xl:py-[6rem]">
-        <div className="flex flex-col justify-between gap-4">
+    <div className="flex items-center justify-center absolute top-[6.5rem] w-full">
+      <div className="flex flex-col md:flex-col lg:flex-row items-center justify-between w-full max-w-[90rem] px-[2rem] md:px-[6rem] py-[1rem] md:py-[4rem]">
+        <div className="flex flex-col justify-between gap-10">
           <Title />
 
           <div className="flex flex-col md:flex-row lg:flex-row justify-between w-full md:w-full lg:w-[35.438rem] lg:h-[5.25rem] gap-2">
