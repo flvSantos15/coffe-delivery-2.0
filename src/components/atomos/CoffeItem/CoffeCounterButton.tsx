@@ -3,10 +3,10 @@ interface ICounterButtonProps {
   onClick?: () => void
 }
 
-export function CoffeCounterButton({ label }: ICounterButtonProps) {
+export function CoffeCounterButton({ label, onClick }: ICounterButtonProps) {
   return (
     <button
-      // onClick={onClick}
+      onClick={onClick}
       className="flex justify-center items-center w-[0.875rem] h-[0.875rem] text-purple"
     >
       {label}

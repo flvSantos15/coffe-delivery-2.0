@@ -8,7 +8,7 @@ export function Header() {
       <div className="flex items-center justify-between bg-background w-[100%] max-w-[90rem] h-[6.5rem] py-[2rem] px-[4rem] md:px-[5rem] lg:px-[6rem] gap-6 md:gap-8 lg:gap-12">
         <Logo />
 
-        <div className="flex justify-end items-center w-[16rem] h-[2.375rem] p-0 gap-[0.75rem]">
+        <div className="flex justify-end items-center h-[2.375rem] p-0 gap-[0.75rem]">
           <Location label="São José de Ribamar, MA" />
 
           <Cart />

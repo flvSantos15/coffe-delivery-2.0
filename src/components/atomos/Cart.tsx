@@ -13,7 +13,7 @@ export function Cart() {
       </Link>
       {cartItems?.length > 0 && (
         <div className="flex justify-center items-center w-[1.25rem] h-[1.25rem] rounded-full bg-yellow-dark mt-[-1.5rem] ml-[-1.4rem]">
-          <p className="font-['Roboto'] font-bold text-xs leading-[1rem] text-white text-center">
+          <p className="font-sans font-bold text-xs leading-[1rem] text-white text-center">
             {cartItems?.length}
           </p>
         </div>
