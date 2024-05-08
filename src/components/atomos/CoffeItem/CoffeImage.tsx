@@ -1,10 +1,17 @@
 /* eslint-disable @next/next/no-img-element */
+import Image from 'next/image'
 interface ICoffeImageProps {
   imageURL: string
 }
 
 export function CoffeImage({ imageURL }: ICoffeImageProps) {
   return (
-    <img src={imageURL} alt="" className="w-[7.5rem] h-[7.5rem] mt-[-1rem]" />
+    <Image
+      src={imageURL}
+      alt=""
+      width={120}
+      height={120}
+      className="mt-[-1rem]"
+    />
   )
 }

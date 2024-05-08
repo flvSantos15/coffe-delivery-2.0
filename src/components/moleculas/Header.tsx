@@ -9,7 +9,7 @@ export function Header() {
         <Logo />
 
         <div className="flex justify-end items-center w-[16rem] h-[2.375rem] p-0 gap-[0.75rem]">
-          <Location />
+          <Location label="São José de Ribamar, MA" />
 
           <Cart />
         </div>

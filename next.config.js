@@ -11,6 +11,15 @@ const nextConfig = {
       }
     }
     return config
+  },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname:
+          'github.com/flvSantos15/coffe-delivery-flv/blob/main/public/assets'
+      }
+    ]
   }
 }
 
