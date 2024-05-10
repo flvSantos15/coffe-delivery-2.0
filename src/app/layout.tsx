@@ -3,6 +3,7 @@ import { Roboto_Flex as Roboto, Baloo_2 as Baloo } from 'next/font/google'
 import './globals.css'
 import TanStackProvider from '@/context/tanStackContext'
 import { CartProvider } from '@/context/cartContext'
+import { FilterProvider } from '@/context/filterContext'
 
 const roboto = Roboto({ subsets: ['latin'], variable: '--font-roboto' })
 const baloo = Baloo({ subsets: ['latin'], variable: '--font-baloo' })
@@ -20,10 +21,12 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body
-        className={`${roboto.variable} ${baloo.variable} font-[sans] bg-background`}
+        className={`${roboto.variable} ${baloo.variable} font-[sans] bg-background h-full`}
       >
         <TanStackProvider>
-          <CartProvider>{children}</CartProvider>
+          <CartProvider>
+            <FilterProvider>{children}</FilterProvider>
+          </CartProvider>
         </TanStackProvider>
       </body>
     </html>

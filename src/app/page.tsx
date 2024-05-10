@@ -6,7 +6,7 @@ import { Hero } from '@/components/organims/Hero'
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col w-full bg-background">
+    <main className="flex min-h-full flex-col w-full bg-background">
       <Header />
 
       <Hero />
