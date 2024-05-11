@@ -8,6 +8,9 @@
 
 # testing
 /coverage
+/tests
+/tests-examples
+playwright.config.ts
 
 # next.js
 /.next/
@@ -27,6 +30,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
 
 # vercel
 .vercel
@@ -37,3 +41,7 @@ next-env.d.ts
 
 # docker
 docker-compose.yml
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

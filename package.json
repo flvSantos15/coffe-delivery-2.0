@@ -9,7 +9,8 @@
     "lint": "next lint",
     "server": "json-server coffeList.json -p 3333",
     "prepare": "husky install",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "playwright:ui": "npx playwright test --ui"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.4",
@@ -26,6 +27,7 @@
   "devDependencies": {
     "@commitlint/cli": "^18.4.4",
     "@commitlint/config-conventional": "^18.4.4",
+    "@playwright/test": "^1.44.0",
     "@tanstack/react-query-devtools": "^5.17.10",
     "@types/node": "^20",
     "@types/react": "^18",
