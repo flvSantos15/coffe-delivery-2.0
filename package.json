@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "server": "json-server coffeList.json -p 8080",
+    "server": "json-server coffeList.json -p 3333",
     "prepare": "husky install",
     "commit": "git-cz",
     "cy:open": "cypress open"
