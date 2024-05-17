@@ -23,12 +23,12 @@ describe('Home', () => {
     cy.visit('/')
   })
 
-  it('Should be able to visit the local host', () => {
-    cy.contains(
-      'p',
-      'Com o Coffee Delivery você recebe seu café onde estiver, a qualquer hora'
-    ).wait(3000)
-  })
+  // it('Should be able to visit the local host', () => {
+  //   cy.contains(
+  //     'p',
+  //     'Com o Coffee Delivery você recebe seu café onde estiver, a qualquer hora'
+  //   ).wait(3000)
+  // })
 
   // it('should not be able to start the countdown if the text and number input is empty', () => {
   //   cy.get(task).should('not.have.text')

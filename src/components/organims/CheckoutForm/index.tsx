@@ -13,6 +13,10 @@ import { DebitIcon } from '@/components/atomos/DebitIconSVG'
 import { CashMoneyIcon } from '@/components/atomos/CashMoneyIconSVG'
 import { useCart } from '@/hooks/useCart'
 import Image from 'next/image'
+import { CheckoutFormTitle } from './CheckoutFormTitle'
+import { CheckoutFormSubtitle } from './CheckoutFormSubtitle'
+import { PrimaryButton } from '@/components/atomos/PrimaryButton'
+import { Divider } from '@/components/atomos/Divider'
 
 const coffeDeliveryFormScheme = zod.object({
   cep: zod.string(),
@@ -62,7 +66,7 @@ export function CheckoutForm() {
     } catch (err) {
       console.log(err)
     } finally {
-      // setLoading(false)
+      setLoading(false)
       // setPaymentMethod('')
       // setCartProducts([])
       reset()
@@ -77,27 +81,17 @@ export function CheckoutForm() {
       >
         <div className="flex flex-col items-start">
           {/* title */}
-          <h2 className="font-serif font-bold text-[1.125rem] leading-[1.438rem] text-center text-base-subtitle">
-            Complete seu pedido
-          </h2>
+          <CheckoutFormTitle label="Complete seu pedido" />
           {/* content */}
           <div className="flex flex-col items-start p-0 gap-[0.75rem] w-[40rem] h-[36.938rem] mt-[0.5rem]">
             <div className="flex flex-col items-start p-[2.5rem] gap-[2rem] w-[40rem] h-[23.25rem] bg-base-card rounded-[0.375rem]">
               {/* endereço */}
-              <div className="flex items-start p-0 gap-[0.5rem] w-[100%]">
-                {/* <img src={locationIcon} alt="" /> */}
-                <LocationIconOutlineSVG />
+              <CheckoutFormSubtitle
+                title="Endereço de Entrega"
+                subtitle="Informe o endereço onde deseja receber seu pedido"
+                icon={<LocationIconOutlineSVG />}
+              />
 
-                <div className="flex flex-col items-start p-0 gap-[0.125rem]">
-                  <p className="font-sans font-normal text-base leading-[1.313rem] text-center text-base-subtitle">
-                    Endereço de Entrega
-                  </p>
-
-                  <p className="font-sans font-normal text-sm leading-[1.313rem] text-center text-base-text">
-                    Informe o endereço onde deseja receber seu pedido
-                  </p>
-                </div>
-              </div>
               {/* form */}
               <div className="flex flex-col items-start p-0 gap-[1rem]">
                 <input
@@ -163,21 +157,13 @@ export function CheckoutForm() {
             </div>
 
             <div className="flex flex-col items-start p-[2.5rem] gap-[2rem] w-[40rem] h-[12.938rem] bg-base-card rounded-[0.375rem]">
-              <div className="flex items-start p-0 gap-[0.5rem] w-[100%]">
-                {/* <img src={moneyIcon} alt="" /> */}
-                <MoneyIconSVG />
+              <CheckoutFormSubtitle
+                title="Pagamento"
+                subtitle="O pagamento é feito na entrega. Escolha a forma que deseja
+                pagar"
+                icon={<MoneyIconSVG />}
+              />
 
-                <div className="flex flex-col items-start p-0 gap-[0.125rem]">
-                  <p className="font-['Roboto'] font-normal text-base leading-[1.313rem] text-center text-base-subtitle">
-                    Pagamento
-                  </p>
-
-                  <p className="font-['Roboto'] font-normal text-sm leading-[1.313rem] text-center text-base-text">
-                    O pagamento é feito na entrega. Escolha a forma que deseja
-                    pagar
-                  </p>
-                </div>
-              </div>
               {/* buttons form */}
               <div className="flex justify-center items-center p-0 gap-[0.75rem]">
                 <button
@@ -193,10 +179,9 @@ export function CheckoutForm() {
                     }
                   )}
                 >
-                  {/* <img src={credCardIcon} /> */}
                   <CredCardIconSVG />
 
-                  <p className="text-center font-['Roboto'] font-normal text-xs leading-[1.188rem] text-base-text">
+                  <p className="text-center font-sans font-normal text-xs leading-[1.188rem] text-base-text">
                     CARTÂO DE CRÉDITO
                   </p>
                 </button>
@@ -214,9 +199,8 @@ export function CheckoutForm() {
                     }
                   )}
                 >
-                  {/* <img src={debitIcon} /> */}
                   <DebitIcon />
-                  <p className="text-center font-['Roboto'] font-normal text-xs leading-[1.188rem] text-base-text">
+                  <p className="text-center font-sans font-normal text-xs leading-[1.188rem] text-base-text">
                     CARTÂO DE DÉBITO
                   </p>
                 </button>
@@ -234,9 +218,8 @@ export function CheckoutForm() {
                     }
                   )}
                 >
-                  {/* <img src={cashMoneyIcon} /> */}
                   <CashMoneyIcon />
-                  <p className="text-center font-['Roboto'] font-normal text-xs leading-[1.188rem] text-base-text">
+                  <p className="text-center font-sans font-normal text-xs leading-[1.188rem] text-base-text">
                     DINHEIRO
                   </p>
                 </button>
@@ -246,9 +229,8 @@ export function CheckoutForm() {
         </div>
 
         <div className="flex flex-col items-start justify-start">
-          <h2 className="font-serif font-bold text-[1.125rem] leading-[1.438rem] text-center text-base-subtitle">
-            Cafés selecionados
-          </h2>
+          <CheckoutFormTitle label="Cafés selecionados" />
+
           <div className="flex flex-col items-start p-[2.5rem] gap-[1.5rem] w-[28rem] h-[31.125rem] mt-[0.5rem] bg-base-card rounded-tl-[0.375rem] rounded-br-[0.375rem] rounded-tr-[2.75rem] rounded-bl-[2.75rem]">
             <div className="flex flex-col w-[100%] gap-[1rem] overflow-auto">
               {/* itens p compra */}
@@ -267,7 +249,7 @@ export function CheckoutForm() {
                         />
 
                         <div className="flex flex-col items-start p-0 gap-[0.5rem] w-[10.75rem] h-[100%]">
-                          <p className="font-['Roboto'] font-normal text-base leading-[1.313rem] text-base-subtitle">
+                          <p className="font-sans font-normal text-base leading-[1.313rem] text-base-subtitle">
                             {coffe.title}
                           </p>
 
@@ -280,7 +262,7 @@ export function CheckoutForm() {
                                 -
                               </button>
 
-                              <p className="font-['Roboto'] font-normal text-base leading-[1.313rem] text-center text-base-title">
+                              <p className="font-sans font-normal text-base leading-[1.313rem] text-center text-base-title">
                                 {coffe.coffeAmount}
                               </p>
 
@@ -296,10 +278,9 @@ export function CheckoutForm() {
                               // onClick={() => removeCoffeFromCart(coffe)}
                               className="flex justify-center items-center py-0 px-[0.5rem] gap-[0.25rem] w-[5.688rem] h-[2rem] bg-base-button rounded-md"
                             >
-                              {/* <img src={trashBin} alt="" /> */}
                               <TrashBinIconSVG />
 
-                              <p className="font-['Roboto'] font-normal text-xs leading-[1.188rem] text-base-text">
+                              <p className="font-sans font-normal text-xs leading-[1.188rem] text-base-text">
                                 REMOVER
                               </p>
                             </button>
@@ -307,13 +288,13 @@ export function CheckoutForm() {
                         </div>
                       </div>
 
-                      <p className="font-['Roboto'] font-bold text-base leading-[1.313rem] text-right text-base-text w-[4rem]">
+                      <p className="font-sans font-bold text-base leading-[1.313rem] text-right text-base-text w-[4rem]">
                         {/* {subTotalPrice(coffe.coffeAmount, coffe.coffePrice)} */}
                         R$ 271
                       </p>
                     </div>
-                    {/* divider */}
-                    <div className="w-[100%] h-[0.5px] bg-base-hover" />
+
+                    <Divider />
                   </>
                 )
               })}
@@ -323,50 +304,47 @@ export function CheckoutForm() {
               {/* items */}
               <div className="flex flex-col justify-center items-start p-0 gap-[0.75rem] h-[5.75rem]">
                 <div className="flex justify-between items-center w-[100%] p-0 gap-[0.5rem] h-[1.313rem]">
-                  <p className="font-['Roboto'] font-normal text-sm leading-[1.125rem] text-right text-base-text">
+                  <p className="font-sans font-normal text-sm leading-[1.125rem] text-right text-base-text">
                     Total de Itens
                   </p>
 
-                  <p className="font-['Roboto'] font-normal text-base leading-[1.313rem] text-right text-base-text">
+                  <p className="font-sans font-normal text-base leading-[1.313rem] text-right text-base-text">
                     {/* {totalItemsPrice()} */}
                     R$ 135
                   </p>
                 </div>
 
                 <div className="flex justify-between items-center w-[100%] p-0 gap-[0.5rem] h-[1.313rem]">
-                  <p className="font-['Roboto'] font-normal text-sm leading-[1.125rem] text-right text-base-text">
+                  <p className="font-sans font-normal text-sm leading-[1.125rem] text-right text-base-text">
                     Entrega
                   </p>
 
-                  <p className="font-['Roboto'] font-normal text-base leading-[1.313rem] text-right text-base-text">
+                  <p className="font-sans font-normal text-base leading-[1.313rem] text-right text-base-text">
                     {/* R$ {deliveryPrice} */}
                     R$ 20
                   </p>
                 </div>
 
                 <div className="flex justify-between items-center w-[100%] p-0 gap-[0.5rem] h-[1.313rem]">
-                  <p className="font-['Roboto'] font-bold text-[1.25rem] leading-[1.625rem] text-right text-base-subtitle">
+                  <p className="font-sans font-bold text-[1.25rem] leading-[1.625rem] text-right text-base-subtitle">
                     Total
                   </p>
 
-                  <p className="font-['Roboto'] font-bold text-[1.25rem] leading-[1.625rem] text-right text-base-subtitle">
+                  <p className="font-sans font-bold text-[1.25rem] leading-[1.625rem] text-right text-base-subtitle">
                     {/* {totalPrice()} */}
                     R$ 123
                   </p>
                 </div>
               </div>
-              {/* button */}
-              <button
-                type="submit"
-                // disabled={loading}
+
+              <PrimaryButton
+                onClick={() => {
+                  return null
+                }}
+                loading={loading}
                 // onClick={handleSubmit(handleOnSubmit)}
-                className="flex justify-center items-center py-[0.75rem] px-[0.5rem] gap-[0.25rem] w-[100%] h-[2.875rem] bg-yellow rounded-md"
-              >
-                <p className="font-['Roboto'] font-bold text-sm leading-[1.375rem] text-white">
-                  {/* {loading ? 'Carregando...' : 'CONFIRMAR PEDIDO'} */}
-                  CONFIRMAR PEDIDO
-                </p>
-              </button>
+                label={loading ? 'Carregando...' : 'CONFIRMAR PEDIDO'}
+              />
             </div>
           </div>
         </div>
