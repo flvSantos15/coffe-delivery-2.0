@@ -21,6 +21,8 @@ Bônus
 [ ] - Adicionar funcionalidade de mensagens para o delivery.
 [ ] - Adicionar funcionalidade de mensagens para o costumer.
 [ ] - Construir o back e o mobile.
+[ ] - Responsividade.
+[X] - Cookies.
 
 Ideias
 
