@@ -1,30 +1,33 @@
 import clsx from 'clsx'
 
-interface ICheckoutPaymentMethodProps extends HTMLButtonElement {
+interface ICheckoutPaymentMethodProps {
   icon: JSX.Element
-  // onClick: () => void
+  onClick: () => void
   label: string
+  name: string
+  paymentMethod: string
 }
 
 export function CheckoutPaymentMethod({
   icon,
   label,
-  ...rest
+  name,
+  paymentMethod,
+  onClick
 }: ICheckoutPaymentMethodProps) {
   return (
     <button
-      // onClick={() => setPaymentMethod('cash')}
+      onClick={onClick}
       type="button"
-      {...register('pagamento')}
       className={clsx(
         'flex items-center p-[1rem] gap-[0.75rem] w-[11.125rem] h-[3.188rem] rounded-md',
         {
-          'bg-base-button': paymentMethod === 'cash',
+          'bg-base-button border border-solid border-purple-light':
+            paymentMethod !== name,
           'bg-purple-light border border-solid border-[#8047F8]':
-            paymentMethod !== 'cash'
+            paymentMethod === name
         }
       )}
-      {...rest}
     >
       {icon}
 

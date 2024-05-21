@@ -7,7 +7,7 @@ export function DebitIcon() {
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <g clip-path="url(#clip0_4219_101)">
+      <g clipPath="url(#clip0_4219_101)">
         <path
           fill-rule="evenodd"
           clipRule="evenodd"
@@ -46,7 +46,7 @@ export function DebitIcon() {
         />
         <path
           fill-rule="evenodd"
-          clip-Rule="evenodd"
+          clipRule="evenodd"
           d="M1.16669 13.5C1.16669 13.2239 1.39054 13 1.66669 13H15.6667C15.9428 13 16.1667 13.2239 16.1667 13.5C16.1667 13.7761 15.9428 14 15.6667 14H1.66669C1.39054 14 1.16669 13.7761 1.16669 13.5Z"
           fill="#8047F8"
         />

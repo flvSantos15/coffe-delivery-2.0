@@ -25,7 +25,7 @@ Bônus
 Ideias
 
 - Login com github, gmail, firebase.
-- Data pode ser armazenada no firebase ou no hygraph.
+- Dados pode ser armazenada no firebase ou no hygraph.
 - Mostrar um alerta de pedidos sendo feitos.
 - Adicionar o stripe para pagamentos.
 

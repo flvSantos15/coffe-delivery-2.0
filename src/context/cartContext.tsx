@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, ReactNode, useEffect, useState } from 'react'
+import { setCookie, parseCookies, destroyCookie } from 'nookies'
 
 import { ICoffeComponentProps } from '@/types/coffe'
 
@@ -9,8 +10,8 @@ export interface AddCoffeProps extends ICoffeComponentProps {
 }
 interface CartContextData {
   addCoffeToCart: (product: AddCoffeProps) => void
-  increaseCartMovieAmount: (item: AddCoffeProps) => void
-  decreaseCartMovieAmount: (item: AddCoffeProps) => void
+  increaseCartAmount: (item: AddCoffeProps) => void
+  decreaseCartAmount: (item: AddCoffeProps) => void
   removeCoffeFromCart: (product: AddCoffeProps) => void
   addCoffe: (item: AddCoffeProps) => void
   cartProducts: AddCoffeProps[]
@@ -26,7 +27,15 @@ interface CartProviderData {
 export const CartContext = createContext({} as CartContextData)
 
 export function CartProvider({ children }: CartProviderData) {
-  const [cartProducts, setCartProducts] = useState<AddCoffeProps[]>([])
+  const [cartProducts, setCartProducts] = useState<AddCoffeProps[]>(() => {
+    const { '@coffe.cart': products } = parseCookies()
+
+    if (products && products !== null) {
+      return JSON.parse(products) as AddCoffeProps[]
+    } else {
+      return []
+    }
+  })
   const [currentProduct, setCurrentProduct] = useState('')
   const [cartItems, setCartItems] = useState<AddCoffeProps[]>([])
 
@@ -49,7 +58,7 @@ export function CartProvider({ children }: CartProviderData) {
     }
   }
 
-  const increaseCartMovieAmount = (coffe: AddCoffeProps) => {
+  const increaseCartAmount = (coffe: AddCoffeProps) => {
     const coffeExist = cartProducts.find(
       (item) => item.id === coffe.id
     ) as AddCoffeProps
@@ -62,7 +71,7 @@ export function CartProvider({ children }: CartProviderData) {
     ])
   }
 
-  const decreaseCartMovieAmount = (coffe: AddCoffeProps) => {
+  const decreaseCartAmount = (coffe: AddCoffeProps) => {
     const coffeExist = cartProducts.find(
       (item) => item.id === coffe.id
     ) as AddCoffeProps
@@ -112,13 +121,20 @@ export function CartProvider({ children }: CartProviderData) {
           setCartItems((state) => [...state, cartProducts[i]])
         }
       }
+
+      setCookie(null, '@coffe.cart', JSON.stringify(cartProducts), {
+        path: '/',
+        maxAge: 1000 * 60 * 60 // 1 hour
+      })
     }
 
     if (cartProducts.length === 0) {
       setCartItems([])
+      destroyCookie(null, '@coffe.cart')
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cartProducts, currentProduct])
+  }, [cartProducts])
 
   return (
     <CartContext.Provider
@@ -130,8 +146,8 @@ export function CartProvider({ children }: CartProviderData) {
         cartProducts,
         currentProduct,
         setCartProducts,
-        decreaseCartMovieAmount,
-        increaseCartMovieAmount
+        decreaseCartAmount,
+        increaseCartAmount
       }}
     >
       {children}

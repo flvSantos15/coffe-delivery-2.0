@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { forwardRef, useRef, useState } from 'react'
+import Image from 'next/image'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import * as zod from 'zod'
-import clsx from 'clsx'
 
 import { TrashBinIconSVG } from '@/components/atomos/TrashBinIconSVG'
 import { LocationIconOutlineSVG } from '@/components/atomos/LocationIconOutlineSVG'
@@ -11,22 +11,29 @@ import { MoneyIconSVG } from '@/components/atomos/MoneyIconSVG'
 import { CredCardIconSVG } from '@/components/atomos/CredCardIconSVG'
 import { DebitIcon } from '@/components/atomos/DebitIconSVG'
 import { CashMoneyIcon } from '@/components/atomos/CashMoneyIconSVG'
-import { useCart } from '@/hooks/useCart'
-import Image from 'next/image'
-import { CheckoutFormTitle } from './CheckoutFormTitle'
-import { CheckoutFormSubtitle } from './CheckoutFormSubtitle'
 import { PrimaryButton } from '@/components/atomos/PrimaryButton'
 import { Divider } from '@/components/atomos/Divider'
+import { CustomInput } from '@/components/atomos/CustomInput'
+
+import { useCart } from '@/hooks/useCart'
+
+import { CheckoutFormTitle } from './CheckoutFormTitle'
+import { CheckoutFormSubtitle } from './CheckoutFormSubtitle'
+import { CheckoutPaymentMethod } from './CheckoutPaymentMethod'
+
+import { ConvertNumber } from '@/utils/ConvertNumber'
+import { setCookie } from 'nookies'
+import { useRouter } from 'next/navigation'
 
 const coffeDeliveryFormScheme = zod.object({
-  cep: zod.string(),
-  rua: zod.string(),
-  number: zod.string(),
-  complemento: zod.string(),
-  bairro: zod.string(),
-  cidade: zod.string(),
-  uf: zod.string(),
-  pagamento: zod.string()
+  cep: zod.string({}),
+  rua: zod.string().min(5, { message: 'A rua é obrigatória.' }),
+  number: zod.string({ description: 'O número é obrigatório.' }),
+  complemento: zod.string().optional(),
+  bairro: zod.string().min(5, { message: 'O bairro é obrigatório.' }),
+  cidade: zod.string().min(5, { message: 'A cidade é obrigatória.' }),
+  uf: zod.string().min(2, { message: 'UF precisa ter no mínimo 2 letras.' }),
+  pagamento: zod.string().optional()
 })
 
 type CoffeDeliveryForm = zod.infer<typeof coffeDeliveryFormScheme>
@@ -34,70 +41,124 @@ type CoffeDeliveryForm = zod.infer<typeof coffeDeliveryFormScheme>
 const deliveryPrice = '3,50'
 
 export function CheckoutForm() {
-  const { cartProducts } = useCart()
-  const { handleSubmit, formState, reset, register } =
-    useForm<CoffeDeliveryForm>({
-      resolver: zodResolver(coffeDeliveryFormScheme)
-    })
+  const router = useRouter()
+  const {
+    cartProducts,
+    increaseCartAmount,
+    decreaseCartAmount,
+    removeCoffeFromCart
+  } = useCart()
+
+  const {
+    handleSubmit,
+    formState: { errors },
+    reset,
+    register,
+    setValue
+  } = useForm<CoffeDeliveryForm>({
+    resolver: zodResolver(coffeDeliveryFormScheme)
+  })
 
   const [paymentMethod, setPaymentMethod] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const handleOnSubmit: SubmitHandler<CoffeDeliveryForm> = async (
-    data: CoffeDeliveryForm
-  ) => {
+  const handleRegister = async (data: CoffeDeliveryForm) => {
     setLoading(true)
     try {
-      // const responseData: CoffeDeliveryForm = await {
-      //   bairro: data.bairro,
-      //   cep: data.cep,
-      //   rua: data.rua,
-      //   number: data.number,
-      //   cidade: data.cidade,
-      //   complemento: data.complemento,
-      //   uf: data.uf,
-      //   pagamento: paymentMethod
-      // }
-      // const response = {
-      //   ...responseData,
-      //   coffe: cartProducts
-      // }
-      // navigate('/success')
+      const responseData: CoffeDeliveryForm = await {
+        bairro: data.bairro,
+        cep: data.cep,
+        rua: data.rua,
+        number: data.number,
+        cidade: data.cidade,
+        complemento: data.complemento,
+        uf: data.uf,
+        pagamento: paymentMethod
+      }
+      const response = {
+        ...responseData,
+        coffe: cartProducts
+      }
+      console.log('response', response)
+      /**
+       * Send for API
+       * Where the order will be saved and the message will be sent
+       */
+      setCookie(null, '@coffe.delivery', JSON.stringify(response))
+      // Toast here
+      router.push('/success')
     } catch (err) {
       console.log(err)
+      // Add sentry here
     } finally {
       setLoading(false)
-      // setPaymentMethod('')
+      setPaymentMethod('')
       // setCartProducts([])
       reset()
     }
   }
 
+  const handleIncreaseCartItens = (coffe: any) => {
+    increaseCartAmount(coffe)
+  }
+
+  const handleDecreaseCartItens = (coffe: any) => {
+    decreaseCartAmount(coffe)
+  }
+
+  const prices: number[] = []
+
+  const subTotalPrice = (amount: number, price: string) => {
+    const priceConverted = Number(price.replace(',', '.'))
+
+    const total = amount * priceConverted
+    prices.push(total)
+
+    return ConvertNumber(total)
+  }
+
+  const totalItemsPrice = () => {
+    const totalPrices = prices.reduce((acc, curr) => {
+      const total = (acc += curr)
+
+      return total
+    }, 0)
+
+    return ConvertNumber(totalPrices)
+  }
+
+  const totalPrice = () => {
+    const totalPrices = prices.reduce((acc, curr) => {
+      const total = (acc += curr)
+
+      return total
+    }, 0)
+
+    return ConvertNumber(totalPrices + Number(deliveryPrice.replace(',', '.')))
+  }
+
   return (
     <div className="flex items-center justify-center xl:py-[6.5rem]">
       <form
-        onSubmit={handleSubmit(handleOnSubmit)}
+        onSubmit={handleSubmit(handleRegister)}
         className="flex items-start justify-between mt-[1rem] w-[100%] max-w-[90rem] px-[10rem] lg:px-[6rem]"
       >
         <div className="flex flex-col items-start">
-          {/* title */}
           <CheckoutFormTitle label="Complete seu pedido" />
-          {/* content */}
+
           <div className="flex flex-col items-start p-0 gap-[0.75rem] w-[40rem] h-[36.938rem] mt-[0.5rem]">
             <div className="flex flex-col items-start p-[2.5rem] gap-[2rem] w-[40rem] h-[23.25rem] bg-base-card rounded-[0.375rem]">
-              {/* endereço */}
               <CheckoutFormSubtitle
                 title="Endereço de Entrega"
                 subtitle="Informe o endereço onde deseja receber seu pedido"
                 icon={<LocationIconOutlineSVG />}
               />
 
-              {/* form */}
-              <div className="flex flex-col items-start p-0 gap-[1rem]">
+              <div className="flex flex-col items-start p-0 gap-4">
                 <input
                   id="cep"
                   type="text"
-                  className="flex items-start p-[0.75rem] gap-[0.25rem] w-[12.5rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid  border-[#e6e5e5]"
+                  className="flex items-start p-[0.75rem] gap-[0.25rem] w-[12.5rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid  border-[#e6e5e5] font-sans text-base-title"
                   placeholder="CEP"
                   {...register('cep')}
                 />
@@ -105,16 +166,16 @@ export function CheckoutForm() {
                 <input
                   id="rua"
                   type="text"
-                  className="flex items-start p-[0.75rem] gap-[0.25rem] w-[35rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid  border-[#e6e5e5]"
+                  className="flex items-start p-[0.75rem] gap-[0.25rem] w-full h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid border-[#e6e5e5] font-sans text-base-title"
                   placeholder="Rua"
                   {...register('rua')}
                 />
 
-                <div className="flex justify-between w-[100%]">
+                <div className="flex justify-between w-[100%] gap-4">
                   <input
                     id="number"
                     type="text"
-                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-[12.5rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid  border-[#e6e5e5]"
+                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-[12.5rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid border-[#e6e5e5] font-sans text-base-title"
                     placeholder="Número"
                     {...register('number')}
                   />
@@ -122,17 +183,17 @@ export function CheckoutForm() {
                   <input
                     id="complemento"
                     type="text"
-                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-[21.75rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid  border-[#e6e5e5]"
+                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-[21.875rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid border-[#e6e5e5] font-sans text-base-title"
                     placeholder="Complemento"
                     {...register('complemento')}
                   />
                 </div>
 
-                <div className="flex justify-between w-[100%]">
+                <div className="flex justify-between w-[100%] gap-4">
                   <input
                     id="bairro"
                     type="text"
-                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-[12.5rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid  border-[#e6e5e5]"
+                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-[12.5rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid border-[#e6e5e5] font-sans text-base-title"
                     placeholder="Bairro"
                     {...register('bairro')}
                   />
@@ -140,7 +201,7 @@ export function CheckoutForm() {
                   <input
                     id="cidade"
                     type="text"
-                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-[17.25rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid  border-[#e6e5e5]"
+                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-[17.25rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid border-[#e6e5e5] font-sans text-base-title"
                     placeholder="Cidade"
                     {...register('cidade')}
                   />
@@ -148,7 +209,7 @@ export function CheckoutForm() {
                   <input
                     id="uf"
                     type="text"
-                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-[3.75rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid  border-[#e6e5e5]"
+                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-[3.75rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid border-[#e6e5e5] font-sans text-base-title"
                     placeholder="UF"
                     {...register('uf')}
                   />
@@ -164,65 +225,42 @@ export function CheckoutForm() {
                 icon={<MoneyIconSVG />}
               />
 
-              {/* buttons form */}
               <div className="flex justify-center items-center p-0 gap-[0.75rem]">
-                <button
-                  onClick={() => setPaymentMethod('credcard')}
-                  type="button"
+                <CheckoutPaymentMethod
+                  onClick={() => {
+                    setPaymentMethod('credcard')
+                    setValue('pagamento', 'credcard')
+                  }}
                   {...register('pagamento')}
-                  className={clsx(
-                    'flex items-center p-[1rem] gap-[0.75rem] w-[11.125rem] h-[3.188rem] rounded-md',
-                    {
-                      'bg-base-button': paymentMethod === 'credcard',
-                      'bg-purple-light border border-solid border-[#8047F8]':
-                        paymentMethod !== 'credcard'
-                    }
-                  )}
-                >
-                  <CredCardIconSVG />
+                  icon={<CredCardIconSVG />}
+                  label="CARTÃO DE CRÉDITO"
+                  name="credcard"
+                  paymentMethod={paymentMethod}
+                />
 
-                  <p className="text-center font-sans font-normal text-xs leading-[1.188rem] text-base-text">
-                    CARTÂO DE CRÉDITO
-                  </p>
-                </button>
-
-                <button
-                  onClick={() => setPaymentMethod('debitcard')}
-                  type="button"
+                <CheckoutPaymentMethod
+                  onClick={() => {
+                    setPaymentMethod('debitcard')
+                    setValue('pagamento', 'debitcard')
+                  }}
                   {...register('pagamento')}
-                  className={clsx(
-                    'flex items-center p-[1rem] gap-[0.75rem] w-[11.125rem] h-[3.188rem] rounded-md',
-                    {
-                      'bg-base-button': paymentMethod === 'debitcard',
-                      'bg-purple-light border border-solid border-[#8047F8]':
-                        paymentMethod !== 'debitcard'
-                    }
-                  )}
-                >
-                  <DebitIcon />
-                  <p className="text-center font-sans font-normal text-xs leading-[1.188rem] text-base-text">
-                    CARTÂO DE DÉBITO
-                  </p>
-                </button>
+                  icon={<DebitIcon />}
+                  label="CARTÃO DE DÉBITO"
+                  name="debitcard"
+                  paymentMethod={paymentMethod}
+                />
 
-                <button
-                  onClick={() => setPaymentMethod('cash')}
-                  type="button"
+                <CheckoutPaymentMethod
+                  onClick={() => {
+                    setPaymentMethod('cash')
+                    setValue('pagamento', 'cash')
+                  }}
                   {...register('pagamento')}
-                  className={clsx(
-                    'flex items-center p-[1rem] gap-[0.75rem] w-[11.125rem] h-[3.188rem] rounded-md',
-                    {
-                      'bg-base-button': paymentMethod === 'cash',
-                      'bg-purple-light border border-solid border-[#8047F8]':
-                        paymentMethod !== 'cash'
-                    }
-                  )}
-                >
-                  <CashMoneyIcon />
-                  <p className="text-center font-sans font-normal text-xs leading-[1.188rem] text-base-text">
-                    DINHEIRO
-                  </p>
-                </button>
+                  icon={<CashMoneyIcon />}
+                  label="DINHEIRO"
+                  name="cash"
+                  paymentMethod={paymentMethod}
+                />
               </div>
             </div>
           </div>
@@ -231,9 +269,8 @@ export function CheckoutForm() {
         <div className="flex flex-col items-start justify-start">
           <CheckoutFormTitle label="Cafés selecionados" />
 
-          <div className="flex flex-col items-start p-[2.5rem] gap-[1.5rem] w-[28rem] h-[31.125rem] mt-[0.5rem] bg-base-card rounded-tl-[0.375rem] rounded-br-[0.375rem] rounded-tr-[2.75rem] rounded-bl-[2.75rem]">
+          <div className="flex flex-col items-start p-[2.5rem] gap-[1.5rem] w-[28rem] max-h-[31.125rem]  mt-[0.5rem] bg-base-card rounded-tl-[0.375rem] rounded-br-[0.375rem] rounded-tr-[2.75rem] rounded-bl-[2.75rem]">
             <div className="flex flex-col w-[100%] gap-[1rem] overflow-auto">
-              {/* itens p compra */}
               {cartProducts.map((coffe) => {
                 return (
                   <>
@@ -245,7 +282,9 @@ export function CheckoutForm() {
                         <Image
                           src={coffe.imageURL}
                           alt=""
-                          className="w-[4rem] h-[4rem]"
+                          width={100}
+                          height={100}
+                          // className="w-[4rem] h-[4rem]"
                         />
 
                         <div className="flex flex-col items-start p-0 gap-[0.5rem] w-[10.75rem] h-[100%]">
@@ -256,7 +295,7 @@ export function CheckoutForm() {
                           <div className="flex justify-between w-[100%] gap-2">
                             <div className="flex justify-center items-center p-[0.5rem] gap-[0.25rem] bg-base-button rounded-[0.375rem] w-[4.5rem] h-[2rem]">
                               <button
-                                // onClick={() => handleDecreaseCartItens(coffe)}
+                                onClick={() => handleDecreaseCartItens(coffe)}
                                 className="flex justify-center items-center w-[0.875rem] h-[0.875rem] text-purple"
                               >
                                 -
@@ -267,7 +306,7 @@ export function CheckoutForm() {
                               </p>
 
                               <button
-                                // onClick={() => handleIncreaseCartItens(coffe)}
+                                onClick={() => handleIncreaseCartItens(coffe)}
                                 className="flex justify-center items-center w-[0.875rem] h-[0.875rem] text-purple"
                               >
                                 +
@@ -275,7 +314,7 @@ export function CheckoutForm() {
                             </div>
 
                             <button
-                              // onClick={() => removeCoffeFromCart(coffe)}
+                              onClick={() => removeCoffeFromCart(coffe)}
                               className="flex justify-center items-center py-0 px-[0.5rem] gap-[0.25rem] w-[5.688rem] h-[2rem] bg-base-button rounded-md"
                             >
                               <TrashBinIconSVG />
@@ -289,8 +328,7 @@ export function CheckoutForm() {
                       </div>
 
                       <p className="font-sans font-bold text-base leading-[1.313rem] text-right text-base-text w-[4rem]">
-                        {/* {subTotalPrice(coffe.coffeAmount, coffe.coffePrice)} */}
-                        R$ 271
+                        {subTotalPrice(coffe.coffeAmount, coffe.price)}
                       </p>
                     </div>
 
@@ -309,8 +347,7 @@ export function CheckoutForm() {
                   </p>
 
                   <p className="font-sans font-normal text-base leading-[1.313rem] text-right text-base-text">
-                    {/* {totalItemsPrice()} */}
-                    R$ 135
+                    {totalItemsPrice()}
                   </p>
                 </div>
 
@@ -320,8 +357,7 @@ export function CheckoutForm() {
                   </p>
 
                   <p className="font-sans font-normal text-base leading-[1.313rem] text-right text-base-text">
-                    {/* R$ {deliveryPrice} */}
-                    R$ 20
+                    R$ {deliveryPrice}
                   </p>
                 </div>
 
@@ -331,18 +367,14 @@ export function CheckoutForm() {
                   </p>
 
                   <p className="font-sans font-bold text-[1.25rem] leading-[1.625rem] text-right text-base-subtitle">
-                    {/* {totalPrice()} */}
-                    R$ 123
+                    {totalPrice()}
                   </p>
                 </div>
               </div>
 
               <PrimaryButton
-                onClick={() => {
-                  return null
-                }}
                 loading={loading}
-                // onClick={handleSubmit(handleOnSubmit)}
+                onClick={handleSubmit(handleRegister)}
                 label={loading ? 'Carregando...' : 'CONFIRMAR PEDIDO'}
               />
             </div>
