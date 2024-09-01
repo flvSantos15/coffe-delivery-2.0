@@ -36,11 +36,11 @@ const itensRight = [
 export function Hero() {
   return (
     <div className="flex items-center justify-center mt-[6.5rem] w-full">
-      <div className="flex flex-col md:flex-col lg:flex-row items-center justify-between w-full max-w-[90rem] px-[2rem] md:px-[6rem] py-[1rem] md:py-[4rem]">
-        <div className="flex flex-col justify-between gap-10">
+      <div className="flex flex-col md:flex-col lg:flex-row items-center justify-between w-full max-w-[90rem] px-[1.5rem] md:px-[6rem] lg:px-[6rem] py-[1rem] md:py-[4rem]">
+        <div className="flex flex-col justify-between gap-5 lg:gap-10">
           <Title />
 
-          <div className="flex flex-col md:flex-row lg:flex-row justify-between w-full md:w-full lg:w-[35.438rem] lg:h-[5.25rem] gap-2">
+          <div className="flex flex-col md:flex-row lg:flex-row justify-between w-full md:w-full gap-2">
             <HeroItems items={itensLeft} />
 
             <HeroItems items={itensRight} />

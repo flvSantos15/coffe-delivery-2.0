@@ -20,7 +20,7 @@ export function CheckoutPaymentMethod({
       onClick={onClick}
       type="button"
       className={clsx(
-        'flex items-center p-[1rem] gap-[0.75rem] w-[11.125rem] h-[3.188rem] rounded-md',
+        'flex items-center p-[1rem] gap-[0.75rem] w-full md:w-[11.125rem] lg:w-[11.125rem] h-[3.188rem] rounded-md',
         {
           'bg-base-button border border-solid border-purple-light':
             paymentMethod !== name,

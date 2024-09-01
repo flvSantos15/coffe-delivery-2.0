@@ -19,9 +19,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR">
-      <body
-        className={`${roboto.variable} ${baloo.variable} font-[sans] bg-background`}
-      >
+      <body className={`${roboto.variable} ${baloo.variable} bg-background`}>
         <TanStackProvider>
           <CartProvider>{children}</CartProvider>
         </TanStackProvider>

@@ -10,7 +10,7 @@ const filterItems = [
 
 export function FilterItems() {
   return (
-    <div className="flex gap-3">
+    <div className="hidden md:flex lg:flex gap-3">
       {filterItems.map((filterItem, index) => {
         return <FilterItem key={`${index}.${filterItem}`} name={filterItem} />
       })}

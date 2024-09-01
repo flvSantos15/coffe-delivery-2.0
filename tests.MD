@@ -21,13 +21,13 @@ Bônus
 [ ] - Adicionar funcionalidade de mensagens para o delivery.
 [ ] - Adicionar funcionalidade de mensagens para o costumer.
 [ ] - Construir o back e o mobile.
-[ ] - Responsividade.
+[X] - Responsividade.
 [X] - Cookies.
 
 Ideias
 
-- Login com github, gmail, firebase.
-- Dados pode ser armazenada no firebase ou no hygraph.
+- Login com gmail, firebase.
+- Dados pode ser armazenada no firebase.
 - Mostrar um alerta de pedidos sendo feitos.
 - Adicionar o stripe para pagamentos.
 

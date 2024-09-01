@@ -22,7 +22,7 @@ import { CheckoutFormSubtitle } from './CheckoutFormSubtitle'
 import { CheckoutPaymentMethod } from './CheckoutPaymentMethod'
 
 import { ConvertNumber } from '@/utils/ConvertNumber'
-import { setCookie } from 'nookies'
+import { destroyCookie, setCookie } from 'nookies'
 import { useRouter } from 'next/navigation'
 
 const coffeDeliveryFormScheme = zod.object({
@@ -46,7 +46,8 @@ export function CheckoutForm() {
     cartProducts,
     increaseCartAmount,
     decreaseCartAmount,
-    removeCoffeFromCart
+    removeCoffeFromCart,
+    setCartProducts
   } = useCart()
 
   const {
@@ -85,6 +86,8 @@ export function CheckoutForm() {
        * Where the order will be saved and the message will be sent
        */
       setCookie(null, '@coffe.delivery', JSON.stringify(response))
+      destroyCookie(null, '@coffe.cart')
+
       // Toast here
       router.push('/success')
     } catch (err) {
@@ -93,7 +96,7 @@ export function CheckoutForm() {
     } finally {
       setLoading(false)
       setPaymentMethod('')
-      // setCartProducts([])
+      setCartProducts([])
       reset()
     }
   }
@@ -138,27 +141,27 @@ export function CheckoutForm() {
   }
 
   return (
-    <div className="flex items-center justify-center xl:py-[6.5rem]">
+    <div className="flex items-center justify-center xl:py-[6.5rem] py-[2rem]">
       <form
         onSubmit={handleSubmit(handleRegister)}
-        className="flex items-start justify-between mt-[1rem] w-[100%] max-w-[90rem] px-[10rem] lg:px-[6rem]"
+        className="flex items-start justify-between gap-4 flex-col md:flex-row lg:flex-row mt-[6rem] lg:mt-[2rem] w-full max-w-[90rem] px-[2rem] lg:px-[6rem]"
       >
         <div className="flex flex-col items-start">
           <CheckoutFormTitle label="Complete seu pedido" />
 
-          <div className="flex flex-col items-start p-0 gap-[0.75rem] w-[40rem] h-[36.938rem] mt-[0.5rem]">
-            <div className="flex flex-col items-start p-[2.5rem] gap-[2rem] w-[40rem] h-[23.25rem] bg-base-card rounded-[0.375rem]">
+          <div className="flex flex-col items-start p-0 gap-[0.75rem] w-full md:w-[40rem] lg:w-[40rem] md:lg-[36.938rem] lg:h-[36.938rem] mt-[0.5rem]">
+            <div className="flex flex-col items-start p-[1rem] md:p-[2.5rem] lg:p-[2.5rem] gap-[2rem] w-full md:h-[23.25rem] lg:h-[23.25rem] bg-base-card rounded-[0.375rem]">
               <CheckoutFormSubtitle
                 title="Endereço de Entrega"
                 subtitle="Informe o endereço onde deseja receber seu pedido"
                 icon={<LocationIconOutlineSVG />}
               />
 
-              <div className="flex flex-col items-start p-0 gap-4">
+              <div className="flex flex-col items-start p-0 gap-4 w-full">
                 <input
                   id="cep"
                   type="text"
-                  className="flex items-start p-[0.75rem] gap-[0.25rem] w-[12.5rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid  border-[#e6e5e5] font-sans text-base-title"
+                  className="flex items-start p-[0.75rem] gap-[0.25rem] w-full md:w-[12.5rem] lg:w-[12.5rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid  border-[#e6e5e5] font-sans text-base-title"
                   placeholder="CEP"
                   {...register('cep')}
                 />
@@ -171,11 +174,11 @@ export function CheckoutForm() {
                   {...register('rua')}
                 />
 
-                <div className="flex justify-between w-[100%] gap-4">
+                <div className="flex flex-col md:flex-row lg:flex-row justify-between w-full gap-4">
                   <input
                     id="number"
                     type="text"
-                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-[12.5rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid border-[#e6e5e5] font-sans text-base-title"
+                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-full md:w-[12.5rem] lg:w-[12.5rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid border-[#e6e5e5] font-sans text-base-title"
                     placeholder="Número"
                     {...register('number')}
                   />
@@ -183,17 +186,17 @@ export function CheckoutForm() {
                   <input
                     id="complemento"
                     type="text"
-                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-[21.875rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid border-[#e6e5e5] font-sans text-base-title"
+                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-full md:w-[21.875rem] lg:w-[21.875rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid border-[#e6e5e5] font-sans text-base-title"
                     placeholder="Complemento"
                     {...register('complemento')}
                   />
                 </div>
 
-                <div className="flex justify-between w-[100%] gap-4">
+                <div className="flex flex-col md:flex-row lg:flex-row justify-between w-full gap-4">
                   <input
                     id="bairro"
                     type="text"
-                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-[12.5rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid border-[#e6e5e5] font-sans text-base-title"
+                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-full md:w-[12.5rem] lg:w-[12.5rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid border-[#e6e5e5] font-sans text-base-title"
                     placeholder="Bairro"
                     {...register('bairro')}
                   />
@@ -201,7 +204,7 @@ export function CheckoutForm() {
                   <input
                     id="cidade"
                     type="text"
-                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-[17.25rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid border-[#e6e5e5] font-sans text-base-title"
+                    className="flex items-start p-[0.75rem] gap-[0.25rem] w-full md:w-[17.25rem] lg:w-[17.25rem] h-[2.625rem] bg-[#eeeded] rounded-[0.25rem] border border-solid border-[#e6e5e5] font-sans text-base-title"
                     placeholder="Cidade"
                     {...register('cidade')}
                   />
@@ -217,7 +220,7 @@ export function CheckoutForm() {
               </div>
             </div>
 
-            <div className="flex flex-col items-start p-[2.5rem] gap-[2rem] w-[40rem] h-[12.938rem] bg-base-card rounded-[0.375rem]">
+            <div className="flex flex-col items-start p-[1rem] md:p-[2.5rem] lg:p-[2.5rem] gap-[2rem] w-full md:h-[12.938rem] lg:h-[12.938rem] bg-base-card rounded-[0.375rem]">
               <CheckoutFormSubtitle
                 title="Pagamento"
                 subtitle="O pagamento é feito na entrega. Escolha a forma que deseja
@@ -225,7 +228,7 @@ export function CheckoutForm() {
                 icon={<MoneyIconSVG />}
               />
 
-              <div className="flex justify-center items-center p-0 gap-[0.75rem]">
+              <div className="flex justify-center flex-col md:flex-row lg:flex-row items-center p-0 gap-[0.75rem] w-full">
                 <CheckoutPaymentMethod
                   onClick={() => {
                     setPaymentMethod('credcard')
@@ -266,11 +269,11 @@ export function CheckoutForm() {
           </div>
         </div>
 
-        <div className="flex flex-col items-start justify-start">
+        <div className="flex flex-col items-start justify-start w-full md:w-[28rem] lg:w-[28rem]">
           <CheckoutFormTitle label="Cafés selecionados" />
 
-          <div className="flex flex-col items-start p-[2.5rem] gap-[1.5rem] w-[28rem] max-h-[31.125rem]  mt-[0.5rem] bg-base-card rounded-tl-[0.375rem] rounded-br-[0.375rem] rounded-tr-[2.75rem] rounded-bl-[2.75rem]">
-            <div className="flex flex-col w-[100%] gap-[1rem] overflow-auto">
+          <div className="flex flex-col items-start p-[1rem] md:p-[2.5rem] lg:p-[2.5rem] gap-[1.5rem] w-full md:w-[28rem] lg:w-[28rem] max-h-[31.125rem]  mt-[0.5rem] bg-base-card rounded-tl-[0.375rem] rounded-br-[0.375rem] rounded-tr-[2.75rem] rounded-bl-[2.75rem]">
+            <div className="flex flex-col w-full gap-[1rem] overflow-auto">
               {cartProducts.map((coffe) => {
                 return (
                   <>
@@ -278,7 +281,7 @@ export function CheckoutForm() {
                       key={coffe.id}
                       className="flex justify-between items-start py-[0.5rem] px-[0.25rem] gap-[3.688rem]"
                     >
-                      <div className="flex items-center p-0 gap-[1.25rem] w-[15.938rem] h-[4rem]">
+                      <div className="flex items-center p-0 gap-[1.25rem] w-full md:w-[15.938rem] lg:w-[15.938rem] h-24 md:h-16 lg:h-16">
                         <Image
                           src={coffe.imageURL}
                           alt=""
@@ -338,7 +341,7 @@ export function CheckoutForm() {
               })}
             </div>
 
-            <div className="flex flex-col justify-between w-[23rem] gap-[1rem]">
+            <div className="flex flex-col justify-between w-full md:w-[23rem] lg:w-[23rem] gap-[1rem]">
               {/* items */}
               <div className="flex flex-col justify-center items-start p-0 gap-[0.75rem] h-[5.75rem]">
                 <div className="flex justify-between items-center w-[100%] p-0 gap-[0.5rem] h-[1.313rem]">

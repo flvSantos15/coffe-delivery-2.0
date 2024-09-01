@@ -10,16 +10,15 @@ export function CheckoutFormSubtitle({
   icon
 }: ICheckoutFormSubtitleProps) {
   return (
-    <div className="flex items-start p-0 gap-[0.5rem] w-[100%]">
-      {/* <MoneyIconSVG /> */}
+    <div className="flex items-start p-0 gap-[0.5rem] w-full">
       {icon}
 
       <div className="flex flex-col items-start p-0 gap-[0.125rem]">
-        <p className="font-sans font-normal text-base leading-[1.313rem] text-center text-base-subtitle">
+        <p className="font-sans font-normal text-base leading-[1.313rem] text-left text-base-subtitle">
           {title}
         </p>
 
-        <p className="font-sans font-normal text-sm leading-[1.313rem] text-center text-base-text">
+        <p className="font-sans font-normal text-sm leading-[1.313rem] text-left text-base-text">
           {subtitle}
         </p>
       </div>

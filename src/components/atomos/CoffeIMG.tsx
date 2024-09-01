@@ -6,7 +6,7 @@ export function CoffeImg() {
     <Image
       src={coffeHome}
       alt=""
-      className="w-[15rem] h-[12rem] lg:w-[29.75rem] lg:h-[22.5rem]"
+      className="w-[15rem] h-[12rem] md:w-[25rem] md:h-[18rem] lg:w-[29.75rem] lg:h-[22.5rem]"
     />
   )
 }
